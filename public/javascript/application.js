@@ -44,14 +44,24 @@ $(function() {
         method: 'POST',
         dataType: 'json',
         data: data,
-        success: function (morePostsHtml) {
+        success: function (result) {
           var temp = 100;
-          temp += 2;
 
           // should handle both success and error returned
 
           // send message back to main page
           $("#message").text("Sucessfully save new contact.");
+
+          // add to table here
+          var myTag = $("#contacts").find('tbody');
+
+          var contact = result.contact;
+
+          var tr = $("<tr>").appendTo(myTag);
+          $("<td>").text(contact.firstname).appendTo(tr);
+          $("<td>").text(contact.lastname).appendTo(tr);
+          $("<td>").text(contact.email).appendTo(tr);
+
         },
         error: function (err) {
           var temp = 100;
@@ -119,14 +129,19 @@ $(function() {
     //   $("<td>").text(contact.lastname).appendTo(tr);
     //   $("<td>").text(contact.email).appendTo(tr);
 
+     removeAllForNewCommand();
 
+     // ----------------------------------------------
+     //  Cheat and get contact form html from server
+     // ----------------------------------------------
      $.ajax({
       url: 'add_contact_form.html',
       method: 'GET',
-      success: function (morePostsHtml) {
+      success: function (addContactsFormHtml) {
         var temp = 100;
 
-        myMainMenu.replaceWith(morePostsHtml);
+        myMainMenu.after(addContactsFormHtml);
+        //myMainMenu.replaceWith();
         registerAddContactSubmitForm();
       }
     });
@@ -141,6 +156,7 @@ $(function() {
 
   function listContactsForm(event, myTag) {
 
+    removeAllForNewCommand();
 
     // get the contacts
     $.getJSON("/contacts", handlers.receiveContacts);
@@ -150,12 +166,12 @@ $(function() {
 
   // ----------------------------------------------------------
   //
-  //  display the "show" Contact form
-  //  ... where user enters  Contact Id
+  //  register an event handler to handle the
+  //  ... submit button on the Show Contact form
   //
   // ----------------------------------------------------------
 
-  function registerShowContactSubmitForm(myTag) {
+  function registerShowContactSubmitForm() {
    $("#submitbutton").on('click', function(event) {
 
       // get values from the form input fields here
@@ -174,7 +190,7 @@ $(function() {
           // send message back to main page
           //  ... display the Contact
 
-          //$("#message").text("Sucessfully retrieved contact.");
+          $("#message").text("Sucessfully retrieved contact.");
           var myTag = $("#contacts").find('tbody');
 
 
@@ -200,18 +216,46 @@ $(function() {
   // ----------------------------------------------------------
   function showContactsForm(event, myTag) {
 
+    removeAllForNewCommand();
+
     $.ajax({
       url: 'show_contact_form.html',
       method: 'GET',
-      success: function (morePostsHtml) {
+      success: function (showContactFormHtml) {
         var temp = 100;
 
-        myTag.replaceWith(morePostsHtml);
+        // ***** change this
+        // concatenate the html to bottom
+        // ... of nav links in views/index.erb
+        myTag.after(showContactFormHtml);
+        //myTag.replaceWith(morePostsHtml);
         registerShowContactSubmitForm();
       }
     });
 
   }
+
+  // ----------------------------------------------------------
+  //
+  //  delete everything ready for new command
+  //
+  // ----------------------------------------------------------
+  function removeAllForNewCommand () {
+
+    // delete all Data Rows in table
+    var myTag = $("#contacts").find('tbody');
+
+    myTag.html("");
+
+    // remove Add Contact Form
+    $('#addcontactcontainer').remove();
+
+    // remove Show Contact Form
+    $('#showcontactcontainer').remove();
+
+    $("#message").text("");
+  }
+
 
   // function () {
   //     var button = $(‘load-more-posts’);
@@ -228,7 +272,9 @@ $(function() {
   //   }
 
   // ----------------------------------------------------------
-  // event handler for links on home page
+  //
+  // event handler for "navigation" links on home page
+  //
   // ----------------------------------------------------------
   $("#mainmenu").on('click', function(event){
 
@@ -236,7 +282,6 @@ $(function() {
     var myTag = $(this);
 
     event.preventDefault();
-
 
     switch(target) {
     case "new":

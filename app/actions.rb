@@ -13,7 +13,7 @@ end
 
 post '/contacts' do
 
-  result = {succeeded: false, message: ''}
+  result = {succeeded: false, message: '', contact: {}}
 
   contact = Contact.new(
      firstname:   params[:firstname],
@@ -24,6 +24,7 @@ post '/contacts' do
       # pass back success message
       result[:succeeded] = true
       result[:message] = 'Saved new Contact to database.'
+      result[:contact] = contact
    end
 
    content_type :json
@@ -32,12 +33,7 @@ end
 
 get '/contacts/:id' do
 
-
-   contact = Contact.find(params[:id].to_i).to_json
-
-   binding.pry
-
-   contact
+   Contact.find(params[:id].to_i).to_json
 
 end
 
