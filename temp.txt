@@ -1,0 +1,50 @@
+
+
+https://instagram.com/oauth/authorize/?client_id=[CLIENT_ID_HERE]&redirect_uri=http://localhost&response_type=token
+
+
+  // CLIENT INFO
+    // CLIENT ID d62e74ff28a94958970a92a4cf727da4
+    // CLIENT SECRET 5562c717c6b44364b8a0b574f6c76379
+    // WEBSITE URL http://localhost:3000
+    // REDIRECT URI  https://github.com/StephanieBeaton    http://localhost:3000
+    // SUPPORT EMAIL stefanybeaton@gmail.com
+
+
+https://instagram.com/oauth/authorize/?client_id=d62e74ff28a94958970a92a4cf727da4&redirect_uri=http://localhost&response_type=token
+
+
+http://localhost/#access_token=2306277391.d62e74f.01eabd78d0704e80b695fc97d52e1b61
+
+
+
+
+
+2:40 pm
+
+https://api.instagram.com/oauth/authorize/?client_id=CLIENTID&redirect_uri=REDIRECT-URI&response_type=code&scope=SCOPE
+
+
+https://api.instagram.com/oauth/authorize/?client_id=d62e74ff28a94958970a92a4cf727da4&redirect_uri=http://localhost&response_type=code&scope=public_content
+
+
+http%3A%2F%2Flocalhost%3A3000
+https://api.instagram.com/oauth/authorize/?client_id=d62e74ff28a94958970a92a4cf727da4&redirect_uri=http%3A%2F%2Flocalhost%3A3000&response_type=code&scope=public_content
+
+
+
+result from Stack Overflow solution
+http://localhost/?code=a70eac6ca37f46649c3bcfff51e3e4ef
+
+( no 3000 port)
+
+
+// this url returns JSON  not  JSONP
+
+https://api.instagram.com/v1/tags/lighthouse/media/recent?access_token=2306277391.d62e74f.01eabd78d0704e80b695fc97d52e1b61
+
+
+https://api.instagram.com/v1/tags/lighthouse/media/recent?access_token=2306277391.d62e74f.01eabd78d0704e80b695fc97d52e1b61&callback=callbackFunction
+
+
+

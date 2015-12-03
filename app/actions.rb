@@ -43,6 +43,14 @@ get '/contacts' do
 
 end
 
+get '/jsonp' do
+  callback = params['callback']
+  content_type :js
+  content = { :response  => 'Sent via JSONP',
+              :timestamp => Time.now,
+              :random    => rand(10000) }
+  "#{callback}(#{content.to_json})"
+end
 
 
 # post '/new_player' do

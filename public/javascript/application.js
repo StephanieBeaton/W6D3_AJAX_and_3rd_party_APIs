@@ -208,6 +208,7 @@ $(function() {
 
     });
   }
+
   // ----------------------------------------------------------
   //
   //  display the "show" Contact form
@@ -222,16 +223,120 @@ $(function() {
       url: 'show_contact_form.html',
       method: 'GET',
       success: function (showContactFormHtml) {
-        var temp = 100;
 
-        // ***** change this
-        // concatenate the html to bottom
-        // ... of nav links in views/index.erb
         myTag.after(showContactFormHtml);
-        //myTag.replaceWith(morePostsHtml);
+
         registerShowContactSubmitForm();
       }
     });
+
+  }
+
+  // ----------------------------------------------------------
+  //
+  //  Get 3rd Party API data
+  //
+  // ----------------------------------------------------------
+  function get3rdPartyAPIData(myTag) {
+
+    removeAllForNewCommand();
+
+    // ----------------------------------------------
+    //  works to my local Sinatra server
+    //
+    // var host_prefix = "http://localhost:3000";
+    //
+    // var url = host_prefix + '/jsonp?callback=?';
+    // ----------------------------------------------
+
+    // Instagram
+    //  [http://instagram.com/developer/endpoints/tags/#get_tags_media_recent]
+
+    // https://api.instagram.com/v1/tags/{tag-name}/media/recent?access_token=ACCESS-TOKEN
+
+    // GET/tags/tag-name/media/recent
+
+    // Hint #2: Instagram has changed there api to sandbox all new apps
+    // and restrict them to only the users posted pictures before the app is approved.
+    // If you're debugging instagram api issues
+    // that are returning no data for tags on the 3rd party api homework,
+    // that's likely the cause.
+
+
+    //   http://www.pinceladasdaweb.com.br/instagram/access-token/
+
+    //  This tool will return an Instagram API access token.
+    //  An access token is required by the Instagram API to make user specific queries.
+    //  Once you have your access token you can pull your recent pictures using this api call:
+
+    //  https://api.instagram.com/v1/users/[USER ID]/media/recent?access_token=[ACCESS TOKEN]
+
+
+    // CLIENT INFO
+    // CLIENT ID d62e74ff28a94958970a92a4cf727da4
+    // CLIENT SECRET 5562c717c6b44364b8a0b574f6c76379
+    // WEBSITE URL http://localhost:3000
+    // REDIRECT URI  https://github.com/StephanieBeaton
+    // SUPPORT EMAIL stefanybeaton@gmail.com
+
+
+   // https://api.instagram.com/v1/tags/{tag-name}/media/recent?access_token=ACCESS-TOKEN
+
+   // If you're writing an AJAX application, and you'd like to wrap our response with a callback,
+   // all you have to do is specify a callback parameter with any API call:
+
+
+    var host_prefix = "https://api.instagram.com";
+    var tag_name = 'lighthouse';
+
+    var ACCESS_TOKEN = "2306277391.d62e74f.01eabd78d0704e80b695fc97d52e1b61";
+    var url = host_prefix + '/v1/tags/' + tag_name + '/media/recent?access_token=' + ACCESS_TOKEN;
+
+    //+ '&callback=callbackFunction'
+
+    console.log(url);
+
+    $.ajax({
+      url: url,
+      method: 'GET',
+      dataType:  'jsonp',
+      success: function (jsonp) {
+
+
+        // Instagram
+        //
+        // Hint #1: extract the image URL from the JSON data by referencing it like so:
+        //          Where index is an integer variable
+        //
+        //     json.data[index].images.standard_resolution.url
+
+
+        $("#message").text("Sucessfully retrieved 3rd party data.");
+
+        var photo_url = "";
+
+        text = "<div class='thirdparty' id='3rdpartydata'>";
+
+        for (var index=0; index<jsonp.data.length; index++) {
+
+          photo_url = jsonp.data[index].images.standard_resolution.url;
+          text += "<img height=200px src='" + photo_url + "'><br>";
+
+        }
+
+        text += "</div>";
+
+        //var text = "<div id='3rdpartydata'>" + JSON.stringify(jsonp, null, 2) + "</div>";
+
+        myTag.after(text);
+
+      },
+      error: function (err) {
+        var temp = 100;
+        console.log("JSONP GET failed.");
+      }
+    });
+
 
   }
 
@@ -254,6 +359,8 @@ $(function() {
     $('#showcontactcontainer').remove();
 
     $("#message").text("");
+
+    $("#3rdpartydata").remove();
   }
 
 
@@ -298,6 +405,10 @@ $(function() {
         break;
     case "find":
         console.log("mainmenu find");
+        break;
+    case "3rdpartyapi":
+        console.log("mainmenu get 3rd party API data");
+        get3rdPartyAPIData(myTag);
         break;
     default:
         console.log("mainmenu error");
